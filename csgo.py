@@ -59,6 +59,36 @@ for key, value in mydict.items():
         if field == "last_match_damage":
             last_match_damage = svalue
 
+#code to read last data and set us up for delta
+if os.path.isfile('.csgofile'):
+    with open('.csgofile', 'r') as infile:
+        #is this the best way to do this?
+        for line in infile.readlines():
+            if kdr in line:
+                lastkdr = line.split(':')
+                lastkdr = lastkdr[1]
+            if rot in line:
+                lastrot = line.split(':')
+                lastrot = lastrot[1]
+            if hsr in line:
+                lasthsr = line.split(':')
+                lasthsr = lasthsr[1]
+            if wlr in line:
+                lastwlr = line.split(':')
+                lastwlr = lastwlr[1]
+            if lmkdr in line:
+                lastlmkdr = line.split(':')
+                lastlmkdr = lastlmkdr[1]
+            if last_match_wins in line:
+                last_last_match_wins = line.split(':')
+                last_last_match_wins = last_last_match_wins[1]
+            if last_match_mvps in line:
+                last_last_match_mvps = line.split(':')
+                last_last_match_mvps = last_last_match_mvps[1]
+            if last_match_damage in line:
+                last_last_match_damage = line.split(':')
+                last_last_match_damage = last_last_match_damage[1]
+
 print()
 print("GLOBAL COMPOSITES")
 print("==========================")
@@ -72,6 +102,20 @@ print("HSR: ", hsr)
 print("WLR: ", wlr)
 
 print()
+print("GLOBAL COMPOSITES DELTA")
+print("==========================")
+#kdr block
+if lastkdr > kdr:
+    print("KDR Delta: ", "↓")
+elif lastkdr == kdr:
+    print("KDR Delta: ", "=")
+elif lastkdr < kdr:
+    print("KDR Delta: ", "↑")
+#rot block
+#hsr block
+#wlr block
+
+print()
 print("LAST MATCH COMPOSITES")
 print("==========================")
 lmkdr = int(last_match_kills) / int(last_match_deaths)
@@ -80,14 +124,30 @@ print("Last Match KDR: ", lmkdr)
 print("Last Match MVPs: ", last_match_mvps)
 print("Last Match Damage: ", last_match_damage)
 
+print()
+print("LAST MATCH COMPOSITES DELTA")
+print("==========================")
+#lmw block
+#lmkdr block
+#lmm block
+#lmd block
 
-# use this to determine delta in gameplay since last run
-"""
-if os.path.isfile('.csgofile'):
+
+# write here to use this to determine delta in gameplay since last run
 with open('.csgofile', 'w') as outfile:
     kdro = "%s:%s" % ("kdr", kdr)
     outfile.write(kdro)
-"""
-
-
-
+    roto = "%s:%s" % ("rot", rot)
+    outfile.write(roto)
+    hsro = "%s:%s" % ("hsr", hsr)
+    outfile.write(hsro)
+    wlro = "%s:%s" % ("wlr", wlr)
+    ourtilfe.write(wlro)
+    lmwo = "%s:%s" % ("lmw", last_match_wins)
+    outfile.write(lmwo)
+    lmkdro = "%s:%s" % ("lmkdr", lmkdr)
+    outfile.write(lmkdro)
+    lmmo = "%s:%s" % ("lmm", last_match_mvps)
+    outfile.write(lmmo)
+    lmdo = "%s:%s" % ("lmd", last_match_damage)
+    outfile.write(lmdo)
