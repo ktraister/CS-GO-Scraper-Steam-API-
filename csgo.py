@@ -81,6 +81,13 @@ print("Last Match MVPs: ", last_match_mvps)
 print("Last Match Damage: ", last_match_damage)
 
 
+# use this to determine delta in gameplay since last run
+"""
+if os.path.isfile('.csgofile'):
+with open('.csgofile', 'w') as outfile:
+    kdro = "%s:%s" % ("kdr", kdr)
+    outfile.write(kdro)
+"""
 
 
 
