@@ -1,7 +1,9 @@
 import requests
 import json
+import os
 
 r = requests.get('http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=CBF58D86B866AF9E5B20A4A48664DA5A&steamid=76561198298885338')
+history_flag = 0
 
 data = r.json()
 
@@ -61,33 +63,42 @@ for key, value in mydict.items():
 
 #code to read last data and set us up for delta
 if os.path.isfile('.csgofile'):
+    history_flag = 1
     with open('.csgofile', 'r') as infile:
         #is this the best way to do this?
         for line in infile.readlines():
-            if kdr in line:
+            if "kdr" in line and "lmkdr" not in line:
                 lastkdr = line.split(':')
                 lastkdr = lastkdr[1]
-            if rot in line:
+                lastkdr = lastkdr.replace('\n', '')
+            if "rot" in line:
                 lastrot = line.split(':')
                 lastrot = lastrot[1]
-            if hsr in line:
+                lastrot = lastrot.replace('\n', '')
+            if "hsr" in line:
                 lasthsr = line.split(':')
                 lasthsr = lasthsr[1]
-            if wlr in line:
+                lasthsr = lasthsr.replace('\n', '')
+            if "wlr" in line:
                 lastwlr = line.split(':')
                 lastwlr = lastwlr[1]
-            if lmkdr in line:
+                lastwlr = lastwlr.replace('\n', '')
+            if "lmkdr" in line:
                 lastlmkdr = line.split(':')
                 lastlmkdr = lastlmkdr[1]
-            if last_match_wins in line:
+                lastlmkdr = lastlmkdr.replace('\n', '')
+            if "last_match_wins" in line:
                 last_last_match_wins = line.split(':')
                 last_last_match_wins = last_last_match_wins[1]
-            if last_match_mvps in line:
+                last_last_match_wins = last_last_match_wins.replace('\n', '')
+            if "last_match_mvps" in line:
                 last_last_match_mvps = line.split(':')
                 last_last_match_mvps = last_last_match_mvps[1]
-            if last_match_damage in line:
+                last_last_match_mvps = last_last_match_mvps.replace('\n', '')
+            if "last_match_damage" in line:
                 last_last_match_damage = line.split(':')
                 last_last_match_damage = last_last_match_damage[1]
+                last_last_match_damage = last_last_match_damage.replace('\n', '')
 
 print()
 print("GLOBAL COMPOSITES")
@@ -101,19 +112,45 @@ print("ROT: ", rot)
 print("HSR: ", hsr)
 print("WLR: ", wlr)
 
-print()
-print("GLOBAL COMPOSITES DELTA")
-print("==========================")
-#kdr block
-if lastkdr > kdr:
-    print("KDR Delta: ", "↓")
-elif lastkdr == kdr:
-    print("KDR Delta: ", "=")
-elif lastkdr < kdr:
-    print("KDR Delta: ", "↑")
-#rot block
-#hsr block
-#wlr block
+if history_flag == 1:
+    print()
+    print("GLOBAL COMPOSITES DELTA")
+    print("==========================")
+    #kdr block
+    lastkdr = float(lastkdr)
+    if lastkdr > kdr:
+        print("KDR Delta: ", "↓")
+    elif lastkdr == kdr:
+        print("KDR Delta: ", "=")
+    elif lastkdr < kdr:
+        print("KDR Delta: ", "↑")
+
+    #rot block
+    lastrot = float(lastrot)
+    if lastrot > rot:
+        print("ROT Delta: ", "↓")
+    elif lastrot == rot:
+        print("ROT Delta: ", "=")
+    elif lastrot < rot:
+        print("ROT Delta: ", "↑")
+
+    #hsr block
+    lasthsr = float(lasthsr)
+    if lasthsr > hsr:
+        print("HSR Delta: ", "↓")
+    elif lasthsr == hsr:
+        print("HSR Delta: ", "=")
+    elif lasthsr < hsr:
+        print("HSR Delta: ", "↑")
+
+    #wlr block
+    lastwlr = float(lastwlr)
+    if lastwlr > wlr:
+        print("wlr Delta: ", "↓")
+    elif lastwlr == wlr:
+        print("KDR Delta: ", "=")
+    elif lastwlr < wlr:
+        print("KDR Delta: ", "↑")
 
 print()
 print("LAST MATCH COMPOSITES")
@@ -135,19 +172,19 @@ print("==========================")
 
 # write here to use this to determine delta in gameplay since last run
 with open('.csgofile', 'w') as outfile:
-    kdro = "%s:%s" % ("kdr", kdr)
+    kdro = "%s:%s\n" % ("kdr", kdr)
     outfile.write(kdro)
-    roto = "%s:%s" % ("rot", rot)
+    roto = "%s:%s\n" % ("rot", rot)
     outfile.write(roto)
-    hsro = "%s:%s" % ("hsr", hsr)
+    hsro = "%s:%s\n" % ("hsr", hsr)
     outfile.write(hsro)
-    wlro = "%s:%s" % ("wlr", wlr)
-    ourtilfe.write(wlro)
-    lmwo = "%s:%s" % ("lmw", last_match_wins)
+    wlro = "%s:%s\n" % ("wlr", wlr)
+    outfile.write(wlro)
+    lmwo = "%s:%s\n" % ("lmw", last_match_wins)
     outfile.write(lmwo)
-    lmkdro = "%s:%s" % ("lmkdr", lmkdr)
+    lmkdro = "%s:%s\n" % ("lmkdr", lmkdr)
     outfile.write(lmkdro)
-    lmmo = "%s:%s" % ("lmm", last_match_mvps)
+    lmmo = "%s:%s\n" % ("lmm", last_match_mvps)
     outfile.write(lmmo)
-    lmdo = "%s:%s" % ("lmd", last_match_damage)
+    lmdo = "%s:%s\n" % ("lmd", last_match_damage)
     outfile.write(lmdo)
